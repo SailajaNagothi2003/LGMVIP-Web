@@ -1,89 +1,62 @@
-function clearScreen()   // This function clear all the values
-{
-document.getElementById("result").value = "";
-}
+window.addEventListener('load', () => {
+	const form = document.querySelector("#new-task-form");
+	const input = document.querySelector("#new-task-input");
+	const list_el = document.querySelector("#tasks");
 
-function display(value)   // This function display values
- {
-    document.getElementById("result").value += value;
-}
+	form.addEventListener('submit', (e) => {
+		e.preventDefault();
 
-function calculate()  // This function evaluates the expression and returns result
- {
-var p = document.getElementById("result").value;
-var q = eval(p);
-document.getElementById("result").value = q;
-}
+		const task = input.value;
 
-var students = [];
+		const task_el = document.createElement('div');
+		task_el.classList.add('task');
 
-function submitForm(event) {
-  event.preventDefault();
+		const task_content_el = document.createElement('div');
+		task_content_el.classList.add('content');
 
-  // Get form values
-  var name = document.getElementById("name").value;
-  var email = document.getElementById("email").value;
-  var phone = document.getElementById("phone").value;
-  var address = document.getElementById("address").value;
-  var gender = document.getElementById("gender").value;
-  var birthdate = document.getElementById("birthdate").value;
-  var course = document.getElementById("course").value;
+		task_el.appendChild(task_content_el);
 
-  // Create student object
-  var student = {
-    name: name,
-    email: email,
-    phone: phone,
-    address: address,
-    gender: gender,
-    birthdate: birthdate,
-    course: course,
-  };
+		const task_input_el = document.createElement('input');
+		task_input_el.classList.add('text');
+		task_input_el.type = 'text';
+		task_input_el.value = task;
+		task_input_el.setAttribute('readonly', 'readonly');
 
-  // Add student object to students array
-  students.push(student);
+		task_content_el.appendChild(task_input_el);
 
-  // Clear form fields
-  document.getElementById("name").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("address").value = "";
-  document.getElementById("gender").value = "";
-  document.getElementById("birthdate").value = "";
-  document.getElementById("course").value = "";
+		const task_actions_el = document.createElement('div');
+		task_actions_el.classList.add('actions');
 
-  // Display students
-  displayStudents();
-}
+		const task_edit_el = document.createElement('button');
+		task_edit_el.classList.add('edit');
+		task_edit_el.innerText = 'Edit';
 
-function displayStudents() {
-  var studentsList = document.getElementById("students-list");
-  studentsList.innerHTML = "";
+		const task_delete_el = document.createElement('button');
+		task_delete_el.classList.add('delete');
+		task_delete_el.innerText = 'Delete';
 
-  for (var i = 0; i < students.length; i++) {
-    var student = students[i];
+		task_actions_el.appendChild(task_edit_el);
+		task_actions_el.appendChild(task_delete_el);
 
-    var listItem = document.createElement("li");
-    listItem.innerHTML =
-      "<strong>Name:</strong> " +
-      student.name +
-      "<br><strong>Email:</strong> " +
-      student.email +
-      "<br><strong>Phone:</strong> " +
-      student.phone +
-      "<br><strong>Address:</strong> " +
-      student.address +
-      "<br><strong>Gender:</strong> " +
-      student.gender +
-      "<br><strong>Birthdate:</strong> " +
-      student.birthdate +
-      "<br><strong>Course:</strong> " +
-      student.course;
+		task_el.appendChild(task_actions_el);
 
-    studentsList.appendChild(listItem);
-  }
-}
+		list_el.appendChild(task_el);
 
-// Bind submitForm function to submit button
-var submitButton = document.getElementById("submit-button");
-submitButton.addEventListener("click", submitForm);
+		input.value = '';
+
+		task_edit_el.addEventListener('click', (e) => {
+			if (task_edit_el.innerText.toLowerCase() == "edit") {
+				task_edit_el.innerText = "Save";
+				task_input_el.removeAttribute("readonly");
+				task_input_el.focus();
+			} else {
+				task_edit_el.innerText = "Edit";
+				task_input_el.setAttribute("readonly", "readonly");
+			}
+		});
+
+		task_delete_el.addEventListener('click', (e) => {
+			list_el.removeChild(task_el);
+		});
+	});
+});
